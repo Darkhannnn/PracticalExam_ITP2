@@ -60,7 +60,12 @@ player_images = {
 }
 current_direction = "left"
 
-coin_image = load_image("coin.png")
+coin_image = [
+    load_image("orange.png"),
+    load_image("cherry.png"),
+    load_image("apple.png"),
+    load_image("strawberry.png")
+]
 
 block_images = [
     load_image("enemy1.png"),
@@ -99,7 +104,7 @@ def update_player_direction():
 
 def generate_block():
     if random.randint(0, 100) < 5:
-        block_type = random.randint(0, 3)  # Randomly choose one of the four block types
+        block_type = random.randint(0, 3)
         block = [pygame.Rect(random.randint(0, WIDTH - BLOCK_SIZE), 0, BLOCK_SIZE, BLOCK_SIZE), block_type]
         blocks.append(block)
 
@@ -118,24 +123,26 @@ def move_blocks():
 
 def generate_coin():
     if random.randint(0, 100) < 5:
-        coin = pygame.Rect(random.randint(0, WIDTH - COIN_SIZE), 0, COIN_SIZE, COIN_SIZE)
-        if not any(coin.colliderect(block[0]) for block in blocks) and not any(coin.colliderect(existing_coin) for existing_coin in coins):
+        coin_type = random.randint(0, len(coin_image) - 1)
+        coin_rect = pygame.Rect(random.randint(0, WIDTH - COIN_SIZE), 0, COIN_SIZE, COIN_SIZE)
+        coin = (coin_rect, coin_type)
+        if not any(coin_rect.colliderect(block[0]) for block in blocks) and not any(existing_coin[0].colliderect(coin_rect) for existing_coin in coins):
             coins.append(coin)
 
 def draw_coins():
     for coin in coins:
-        screen.blit(coin_image, coin)
+        screen.blit(coin_image[coin[1]], coin[0])
 
 def move_coins():
     for coin in coins:
-        coin.y += 2
-        if coin.y > HEIGHT:
+        coin[0].y += 2
+        if coin[0].y > HEIGHT:
             coins.remove(coin)
 
 def check_coin_collection():
     global coin_score
     for coin in coins[:]:
-        if player.colliderect(coin):
+        if coin[0].colliderect(player):
             coins.remove(coin)
             coin_score += 1
 
