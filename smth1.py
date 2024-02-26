@@ -23,7 +23,7 @@ WHITE = (255, 255, 255)
 YELLOW = (255, 255, 0)
 
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
-pygame.display.set_caption("Dodge the Blocks")
+pygame.display.set_caption("Packun")
 
 clock = pygame.time.Clock()
 
